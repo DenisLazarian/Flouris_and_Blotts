@@ -1,5 +1,7 @@
 package com.web.app.flourishandblotts.config;
 
+import com.web.app.flourishandblotts.services.UserDetailsServiceImpl;
+import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -8,12 +10,14 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
+
+    @Resource
+    UserDetailsServiceImpl userDetailsService;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -24,22 +28,24 @@ public class SecurityConfig {
                     auth.requestMatchers("/hello").permitAll();
                     auth.anyRequest().authenticated();
                 })
-                .sessionManagement(session->{
-                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-                })
+                .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 .build();
     }
 
+    @Bean
     PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
 
+
+    @SuppressWarnings("removal")
     @Bean
-    AuthenticationManager authenticationManager(HttpSecurity http, PasswordEncoder passwordEncoder){
+    AuthenticationManager authenticationManager(HttpSecurity http,
+                                                PasswordEncoder passwordEncoder) throws Exception {
 
         return http.getSharedObject(AuthenticationManagerBuilder.class)
-                .userDetailsService(userDetailService)
+                .userDetailsService(this.userDetailsService)
                 .passwordEncoder(passwordEncoder)
                 .and().build();
     }
