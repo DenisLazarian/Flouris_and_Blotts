@@ -1,5 +1,7 @@
 package com.web.app.flourishandblotts.config;
 
+import com.web.app.flourishandblotts.config.filters.JwtAuthenticationFilter;
+import com.web.app.flourishandblotts.config.jwt.JwtUtils;
 import com.web.app.flourishandblotts.services.UserDetailsServiceImpl;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Bean;
@@ -17,10 +19,19 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Resource
+    JwtUtils jwtUtils;
+
+    @Resource
     UserDetailsServiceImpl userDetailsService;
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter();
+
+        // Change the authentication manager settings
+        jwtAuthenticationFilter.setAuthenticationManager(authenticationManager);
+        jwtAuthenticationFilter.setFilterProcessesUrl("/login");
+
         return http
                 .csrf(AbstractHttpConfigurer::disable)  // config -> config.disable()
                 .authorizeHttpRequests(auth->{
@@ -29,7 +40,7 @@ public class SecurityConfig {
                     auth.anyRequest().authenticated();
                 })
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
+                .addFilter(jwtAuthenticationFilter)
                 .build();
     }
 
