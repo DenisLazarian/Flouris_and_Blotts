@@ -1,0 +1,31 @@
+{
+  "types": {
+    "customType": {
+      "description": "My custom type description"
+    },
+    "anotherCustomType": {},
+    "yetAnotherCustomType": {
+      "description": "This is my description",
+      "scopes": {
+        "first": {
+          "description": "My first description"
+        },
+        "second": {
+          "description": "My second description"
+        }
+      }
+    }
+  },
+  "commonScopes": {
+    "one": {
+      "description": "My first common scope"
+    },
+    "two": {}
+  },
+  "footerTypes": [
+    {
+      "name": "My-custom-footer",
+      "description": "My footer description"
+    }
+  ]
+}
