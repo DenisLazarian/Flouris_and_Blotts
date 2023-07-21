@@ -3,11 +3,11 @@ package com.web.app.flourishandblotts.config.filters;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.web.app.flourishandblotts.config.jwt.JwtUtils;
 import com.web.app.flourishandblotts.models.UserEntity;
-import jakarta.annotation.Resource;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,17 +20,21 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    @Resource
-    private JwtUtils jwtUtils;
+//    @Resource
+    private final JwtUtils jwtUtils;
+    public JwtAuthenticationFilter(JwtUtils JwtUtils){
+    this.jwtUtils = JwtUtils;
+}
+
 
     /**
      * Here we are attempting the user authentication.
      * */
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-
         String username;
         String password;
 
