@@ -26,7 +26,7 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter();
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(this.jwtUtils);
 
         // Change the authentication manager settings
         jwtAuthenticationFilter.setAuthenticationManager(authenticationManager);
@@ -36,7 +36,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)  // config -> config.disable()
                 .authorizeHttpRequests(auth->{
                     // manage routing by permission
-                    auth.requestMatchers("/hello").permitAll();
+                    auth.requestMatchers("/hello", "/login").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
