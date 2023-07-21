@@ -25,10 +25,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Resource
     private JwtUtils jwtUtils;
 
-//    public JwtAuthenticationFilter(JwtUtils jwtUtils){
-//        this.jwtUtils=jwtUtils;
-//    }
-
+    /**
+     * Here we are attempting the user authentication.
+     * */
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
