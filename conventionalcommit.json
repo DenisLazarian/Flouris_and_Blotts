@@ -1,11 +1,43 @@
 {
   "types": {
-    "customType": {
-      "description": "My custom type description"
+    "feat": {
+      "description": "it used to describe that a functionality or a entity is added in the project."
     },
-    "anotherCustomType": {},
-    "yetAnotherCustomType": {
+    "fix": {
+      "description": "It used for notice the fixing of a bug."
+    },
+    "build": {
+      "description": "It makes for building projectes"
+    },
+    "chore": {
+      "description": "Itt use for notice the changes made in the configuration of the project. Example: application.properties. "
+    },
+    "docs": {
+      "description": "It used to describe the changes effectuated in the documentation of a project. It can be in a javadoc, README..."
+    },
+
+    "test": {
+      "description": "it used for notice a change about testing."
+    },
+    "refactor": {
+      "description": "It used when we make a refactor, it means that, we change the structure or the functioning of a entity or class of the project"
+    },
+    "revert": {
+      "description": "Reverting a change, come back to the last change."
+    },
+    "style": {
+      "description": "It used to describe ha change of the type of response of a functionality, for example, in a api it changed the type of response."
+    },
+    "frontend-style": {
+      "description": "It used to describe ha change of the type of response of a functionality, for example, in a api it changed the type of response."
+    },
+    "perf": {
+      "description": "This key indicate the improves of a functionality, can be a reduction of time-execution, algorithm optimization, etc."
+    },
+    "customType": {
       "description": "This is my description",
+
+
       "scopes": {
         "first": {
           "description": "My first description"
@@ -14,13 +46,20 @@
           "description": "My second description"
         }
       }
+
+
     }
   },
   "commonScopes": {
-    "one": {
-      "description": "My first common scope"
+    "api-controller": {
+      "description": "represents that, will make changes in backend controllers."
     },
-    "two": {}
+    "api-classes": {
+      "description": "Represents that will make changes in a class of the backend"
+    },
+    "frontend": {
+      "description": "The changes will be made in frontend files, Example: Typescript files, html files, etc."
+    }
   },
   "footerTypes": [
     {
