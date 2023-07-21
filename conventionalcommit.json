@@ -59,6 +59,15 @@
     },
     "frontend": {
       "description": "The changes will be made in frontend files, Example: Typescript files, html files, etc."
+    },
+    "api-service": {
+      "description": "We are changing a service of backend system."
+    },
+    "component": {
+      "description": "We are changing a component of backend system."
+    },
+    "configuration": {
+      "description": "We are changing a configuration of backend system."
     }
   },
   "footerTypes": [
