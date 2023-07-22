@@ -1,7 +1,6 @@
 package com.web.app.flourishandblotts.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,5 +18,6 @@ public class RoleEntity {
     private Long id;
 
     @Enumerated(EnumType.STRING)
+    @Column(unique = true)
     private ERole name;
 }

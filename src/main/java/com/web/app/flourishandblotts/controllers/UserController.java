@@ -5,6 +5,7 @@ import com.web.app.flourishandblotts.controllers.request.CreateUserDTO;
 import com.web.app.flourishandblotts.models.ERole;
 import com.web.app.flourishandblotts.models.RoleEntity;
 import com.web.app.flourishandblotts.models.UserEntity;
+import com.web.app.flourishandblotts.repositories.RoleRepository;
 import com.web.app.flourishandblotts.repositories.UserRepository;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
@@ -20,6 +21,9 @@ import java.util.stream.Collectors;
 public class UserController {
     @Resource
     private UserRepository userRepository;
+
+    @Resource
+    private RoleRepository roleRepository;
     @Resource
     private PasswordEncoder passwordEncoder;
     @GetMapping("/hello")
@@ -34,11 +38,14 @@ public class UserController {
 
     @PostMapping("/user/create")
     public ResponseEntity<?> createUser(@RequestBody @Valid CreateUserDTO createUserDTO){
-
         Set<RoleEntity> roles = createUserDTO.getRoles().stream()
-                .map(role -> RoleEntity.builder()
-                        .name(ERole.valueOf(role))
-                        .build())
+                .map(roleName -> {
+                    ERole role = ERole.valueOf(roleName);
+                    return roleRepository.findByName(role).orElseGet(() -> {
+                        RoleEntity newRole = RoleEntity.builder().name(role).build();
+                        return roleRepository.save(newRole);
+                    });
+                })
                 .collect(Collectors.toSet());
 
         UserEntity userEntity = UserEntity.builder()

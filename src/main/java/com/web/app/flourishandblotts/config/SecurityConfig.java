@@ -1,6 +1,7 @@
 package com.web.app.flourishandblotts.config;
 
 import com.web.app.flourishandblotts.config.filters.JwtAuthenticationFilter;
+import com.web.app.flourishandblotts.config.filters.JwtAuthorizationFilter;
 import com.web.app.flourishandblotts.config.jwt.JwtUtils;
 import com.web.app.flourishandblotts.services.UserDetailsServiceImpl;
 import jakarta.annotation.Resource;
@@ -14,6 +15,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
@@ -23,6 +25,9 @@ public class SecurityConfig {
 
     @Resource
     UserDetailsServiceImpl userDetailsService;
+
+    @Resource
+    JwtAuthorizationFilter authorizationFilter;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
@@ -41,6 +46,7 @@ public class SecurityConfig {
                 })
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilter(jwtAuthenticationFilter)
+                .addFilterBefore(this.authorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
