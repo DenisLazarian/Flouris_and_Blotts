@@ -1,15 +1,9 @@
 package com.web.app.flourishandblotts.controllers.request;
 
 import com.web.app.flourishandblotts.models.Penalization;
-import com.web.app.flourishandblotts.models.RoleEntity;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import java.util.Date;
 import java.util.Set;

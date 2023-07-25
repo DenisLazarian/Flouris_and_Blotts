@@ -2,25 +2,26 @@ package com.web.app.flourishandblotts.controllers;
 
 
 import com.web.app.flourishandblotts.controllers.request.CreateUserDTO;
-import com.web.app.flourishandblotts.models.ERole;
-import com.web.app.flourishandblotts.models.RoleEntity;
 import com.web.app.flourishandblotts.models.UserEntity;
 import com.web.app.flourishandblotts.repositories.RoleRepository;
 import com.web.app.flourishandblotts.repositories.UserRepository;
+import com.web.app.flourishandblotts.services.UserEntityService;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @RestController
+@RequestMapping("/user")
 public class UserController {
     @Resource
     private UserRepository userRepository;
+
+    @Resource
+    private UserEntityService userService;
 
     @Resource
     private RoleRepository roleRepository;
@@ -36,40 +37,33 @@ public class UserController {
         return "Hello secured";
     }
 
-    @PostMapping("/user/create")
+    @PostMapping("/create")
     public ResponseEntity<?> createUser(@RequestBody @Valid CreateUserDTO createUserDTO){
-        Set<RoleEntity> roles = createUserDTO.getRoles().stream()
-                .map(roleName -> {
-                    ERole role = ERole.valueOf(roleName);
-                    return roleRepository.findByName(role).orElseGet(() -> {
-                        RoleEntity newRole = RoleEntity.builder().name(role).build();
-                        return roleRepository.save(newRole);
-                    });
-                })
-                .collect(Collectors.toSet());
-
-        UserEntity userEntity = UserEntity.builder()
-                .dniNie(createUserDTO.getDni_nie())
-                .password(this.passwordEncoder.encode(createUserDTO.getPassword()))
-                .name(createUserDTO.getName())
-                .surname1(createUserDTO.getSurname1())
-                .surname2(createUserDTO.getSurname2())
-                .mail(createUserDTO.getMail())
-                .status(createUserDTO.getStatus())
-                .lastModifiedDate(new Date(new java.util.Date().getTime()))
-                .roles(roles)
-                .penalization(null)
-                .build();
-
-        this.userRepository.save(userEntity);
-
-        return ResponseEntity.ok(userEntity);
+        return ResponseEntity.ok(this.userService.createUser(createUserDTO));
     }
 
-    @DeleteMapping("/user/{id}")
+
+    @PutMapping("/{id}") // we use Put if we modify all properties of an object. In case we don't need to change all properties, we use a PATCH.
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody @Valid UserEntity userEntity){
+
+        if(this.userRepository.getById(id).isEmpty()) return ResponseEntity.notFound().build();
+
+        UserEntity userUpdated = this.userService.updateUser(userEntity, id);
+
+        return ResponseEntity.ok().body(userUpdated);
+    }
+
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id){
-        this.userRepository.deleteById(id);
+        this.userService.deleteUser(id);
+
         return ResponseEntity.ok().body("User deleted with exit.");
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<?> listUser() {
+        List<UserEntity> userList= this.userService.list();
+        return ResponseEntity.ok(userList);
     }
 
 
