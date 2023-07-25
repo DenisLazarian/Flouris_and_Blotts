@@ -53,6 +53,8 @@ public class UserEntity {
     @NotBlank
     private String status; // Active o Inactive
 
+    @Column(name = "avatar_file")
+    private String avatarFile;
 
 
     @LastModifiedDate
