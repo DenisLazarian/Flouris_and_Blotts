@@ -51,7 +51,7 @@ public class UserEntity {
     private String mail;
 
     @NotBlank
-    private String status; // Active o Inactive
+    private boolean status; // Active o Inactive
 
     @Column(name = "avatar_file")
     private String avatarFile;
@@ -72,13 +72,18 @@ public class UserEntity {
     @OneToOne(
             cascade = CascadeType.ALL,
             targetEntity = Penalization.class,
-            mappedBy = "student"
+            mappedBy = "user"
     )
     private Penalization penalization;
 
 
     @ManyToOne(targetEntity = Study.class)
     private Study study;
+
+
+    private String profFamilyName;
+
+    private String teacherType;
 
     /*
     * Obtaining the role of the user.
@@ -94,4 +99,8 @@ public class UserEntity {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
     )
     private Set<RoleEntity> roles;
+
+    @OneToMany(targetEntity = Comment.class,mappedBy = "user")
+    private Set<Comment> comments;
+
 }

@@ -1,11 +1,18 @@
 package com.web.app.flourishandblotts.models;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.Date;
 
 @Entity
 @Table(name = "penalization")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Getter
+@Setter @ToString
 public class Penalization {
 
     @Id
@@ -14,6 +21,6 @@ public class Penalization {
     private Date finishPenalizationDate;
 
     @OneToOne
-    private UserEntity student;
+    private UserEntity user;
 
 }

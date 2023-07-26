@@ -46,7 +46,7 @@ public class UserEntityService {
                 .surname1(createUserDTO.getSurname1())
                 .surname2(createUserDTO.getSurname2())
                 .mail(createUserDTO.getMail())
-                .status(createUserDTO.getStatus())
+                .status(Boolean.parseBoolean(createUserDTO.getStatus()))
                 .lastModifiedDate(new Date(new java.util.Date().getTime()))
                 .roles(roles)
                 .penalization(null)
@@ -84,7 +84,7 @@ public class UserEntityService {
         u.setMail(request.getMail());
         u.setDniNie(request.getDniNie());
         u.setName(request.getName());
-        u.setStatus(request.getStatus());
+        u.setStatus(request.isStatus());
         if(!(request.getPassword().isEmpty() || request.getPassword().isBlank())){
             u.setPassword(this.passwordEncoder.encode(request.getPassword()));
         }
