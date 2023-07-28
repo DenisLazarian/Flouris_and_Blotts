@@ -56,7 +56,6 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id){
         this.userService.deleteUser(id);
-
         return ResponseEntity.ok().body("User deleted with exit.");
     }
 
@@ -64,6 +63,12 @@ public class UserController {
     public ResponseEntity<?> listUser() {
         List<UserEntity> userList= this.userService.list();
         return ResponseEntity.ok(userList);
+    }
+
+    @PostMapping("/read-csv")
+    public ResponseEntity<?> readCSV(){
+        this.userService.createOrSaveFromCSV();
+        return null;
     }
 
 

@@ -33,12 +33,6 @@ public class App {
         };
     }
 
-
-
-
-
-
-
     public void creatingUsers(){
         UserEntity userEntity1 = UserEntity.builder()
                 .mail("user@me.local")

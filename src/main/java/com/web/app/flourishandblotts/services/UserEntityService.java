@@ -70,7 +70,6 @@ public class UserEntityService {
 
         UserEntity user = userOptional.get();
 
-        System.out.println(request.toString());
         return this.makeSetters(user, request);
     }
 
@@ -100,5 +99,13 @@ public class UserEntityService {
         this.userRepository.save(u);
         return u;
     }
+
+    public List<UserEntity> createOrSaveFromCSV(){
+
+        return null;
+    }
+
+
+
 
 }
