@@ -59,6 +59,7 @@ public class UserController {
         return ResponseEntity.ok().body("User deleted with exit.");
     }
 
+//    @CrossOrigin("http://localhost:4200")
     @GetMapping("/list")
     public ResponseEntity<?> listUser() {
         List<UserEntity> userList= this.userService.list();
@@ -69,6 +70,13 @@ public class UserController {
     public ResponseEntity<?> readCSV(){
         this.userService.createOrSaveFromCSV();
         return null;
+    }
+
+
+    @PostMapping("prove/file")
+    public ResponseEntity<?> prove(@RequestBody String algo){
+        System.out.println(algo);
+        return ResponseEntity.ok(algo);
     }
 
 
