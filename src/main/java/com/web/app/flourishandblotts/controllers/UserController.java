@@ -5,9 +5,12 @@ import com.web.app.flourishandblotts.controllers.request.CreateUserDTO;
 import com.web.app.flourishandblotts.models.UserEntity;
 import com.web.app.flourishandblotts.repositories.RoleRepository;
 import com.web.app.flourishandblotts.repositories.UserRepository;
+import com.web.app.flourishandblotts.services.StorageService;
 import com.web.app.flourishandblotts.services.UserEntityService;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +19,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/user")
+@AllArgsConstructor
 public class UserController {
     @Resource
     private UserRepository userRepository;
@@ -23,10 +27,8 @@ public class UserController {
     @Resource
     private UserEntityService userService;
 
-    @Resource
-    private RoleRepository roleRepository;
-    @Resource
-    private PasswordEncoder passwordEncoder;
+
+
     @GetMapping("/hello")
     public String hello(){
         return "Hello world not secured";

@@ -45,8 +45,13 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)  // config -> config.disable()
                 .authorizeHttpRequests(auth->{
                     // manage routing by permission
-                    auth.requestMatchers("/hello", "/login", "user/**").permitAll();
-                    auth.anyRequest().authenticated();
+                    auth.requestMatchers( // here we allow without authentication or any filer, to user this uris
+                            "/hello",
+                            "/login",
+                            "user/**",
+                            "file/**"
+                    ).permitAll();
+                    auth.anyRequest().authenticated(); // here we specify the application to not allow any request to use, except the uris specified previously
                 })
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilter(jwtAuthenticationFilter)
