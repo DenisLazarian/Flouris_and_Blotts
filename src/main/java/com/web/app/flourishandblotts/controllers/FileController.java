@@ -1,7 +1,6 @@
 package com.web.app.flourishandblotts.controllers;
 
 import com.web.app.flourishandblotts.services.StorageService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
@@ -26,15 +25,20 @@ public class FileController {
     private final HttpServletRequest request;
 
 
-    @PostMapping("uploads")
+    @PostMapping("upload")
     public Map<String, String > uploadFile(@RequestParam("file") MultipartFile multipartFile){
         String path = this.storageService.store(multipartFile);
-        String host = this.request.getRequestURL().toString().replace(this.request.getRequestURL(), "");
+//        String host = this.request.getRequestURL().toString().replace(this.request.getRequestURL(), "");
+        String host = this.request.getRequestURL().toString();
+        System.out.println("host");
+        System.out.println(this.request.getRequestURL());
         String url = ServletUriComponentsBuilder
                 .fromHttpUrl(host)
                 .path("/file/")
                 .path(path)
                 .toUriString();
+
+        url = url.replace("/upload/file", "");
         return Map.of("url", url);
     }
 

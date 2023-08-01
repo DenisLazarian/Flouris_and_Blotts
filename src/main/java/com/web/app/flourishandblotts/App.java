@@ -29,7 +29,7 @@ public class App {
     @Bean
     CommandLineRunner init(){
         return args -> {
-            creatingUsers();
+//            creatingUsers();
         };
     }
 
