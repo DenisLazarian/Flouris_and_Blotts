@@ -5,22 +5,34 @@ import com.web.app.flourishandblotts.models.RoleEntity;
 import com.web.app.flourishandblotts.models.UserEntity;
 import com.web.app.flourishandblotts.repositories.UserRepository;
 import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Objects;
 import java.util.Set;
 
 @SpringBootApplication
 public class App {
+
+    private final Environment environment;
+
+    @Autowired
+    public App(Environment environment) {
+        this.environment = environment;
+    }
 
     @Resource
     UserRepository userRepository;
 
     @Resource
     PasswordEncoder passwordEncoder;
+
+
 
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
@@ -29,7 +41,13 @@ public class App {
     @Bean
     CommandLineRunner init(){
         return args -> {
-//            creatingUsers();
+            String environmentStatus = environment.getProperty("spring.jpa.hibernate.ddl-auto");
+            if(
+                    Objects.equals(environmentStatus, "create-drop") ||
+                    Objects.equals(environmentStatus, "create")
+            ){
+                this.creatingUsers();
+            }
         };
     }
 
