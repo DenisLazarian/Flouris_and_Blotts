@@ -63,6 +63,7 @@ public class UserEntity {
 
     @NotBlank
     private String course;
+    
 
     @NotBlank
     @Column(name = "user_group") // WARNING FOR POSSIBLE ERROR: the name "group" it's  a MySQL reserved word, should not be used this name.

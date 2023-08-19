@@ -2,6 +2,7 @@ package com.web.app.flourishandblotts;
 
 import com.web.app.flourishandblotts.models.ERole;
 import com.web.app.flourishandblotts.models.RoleEntity;
+import com.web.app.flourishandblotts.models.Study;
 import com.web.app.flourishandblotts.models.UserEntity;
 import com.web.app.flourishandblotts.repositories.UserRepository;
 import jakarta.annotation.Resource;
@@ -52,6 +53,8 @@ public class App {
     }
 
     public void creatingUsers(){
+
+
         UserEntity userEntity1 = UserEntity.builder()
                 .mail("user@me.local")
                 .name("user")
@@ -61,7 +64,7 @@ public class App {
                 .password(passwordEncoder.encode("1234"))
                 .status(true)
                 .lastModifiedDate(new java.sql.Date(new java.util.Date().getTime()))
-                .course("Bachiller")
+                .course("2")
                 .penalization(null)
                 .study(null)
                 .roles(Set.of(RoleEntity.builder()
@@ -109,6 +112,8 @@ public class App {
 
         this.userRepository.save(admin);
     }
+
+
 
 
 

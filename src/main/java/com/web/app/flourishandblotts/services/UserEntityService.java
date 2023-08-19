@@ -3,11 +3,14 @@ package com.web.app.flourishandblotts.services;
 import com.web.app.flourishandblotts.controllers.request.CreateUserDTO;
 import com.web.app.flourishandblotts.models.ERole;
 import com.web.app.flourishandblotts.models.RoleEntity;
+import com.web.app.flourishandblotts.models.Study;
 import com.web.app.flourishandblotts.models.UserEntity;
 import com.web.app.flourishandblotts.repositories.RoleRepository;
+import com.web.app.flourishandblotts.repositories.StudyRepository;
 import com.web.app.flourishandblotts.repositories.UserRepository;
 import jakarta.annotation.Resource;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,18 +29,25 @@ public class UserEntityService {
     private RoleRepository roleRepository;
     @Resource
     private PasswordEncoder passwordEncoder;
+    @Resource
+    private StudyRepository studyRepository;
 
 
     public UserEntity createUser(CreateUserDTO createUserDTO){
         Set<RoleEntity> roles = createUserDTO.getRoles().stream()
                 .map(roleName -> {
                     ERole role = ERole.valueOf(roleName);
-                    return roleRepository.findByName(role).orElseGet(() -> {
+                    return this.roleRepository.findByName(role).orElseGet(() -> {
                         RoleEntity newRole = RoleEntity.builder().name(role).build();
-                        return roleRepository.save(newRole);
+                        return this.roleRepository.save(newRole);
                     });
                 })
                 .collect(Collectors.toSet());
+
+        Study study = this.studyRepository.findStudyByName(createUserDTO.getStudy()).orElseGet(()->{
+                        Study newStudy = Study.builder().name(createUserDTO.getStudy()).build();
+                        return this.studyRepository.save(newStudy);
+                    });
 
         UserEntity userEntity = UserEntity.builder()
                 .dniNie(createUserDTO.getDni_nie())
@@ -50,6 +60,7 @@ public class UserEntityService {
                 .lastModifiedDate(new Date(new java.util.Date().getTime()))
                 .roles(roles)
                 .penalization(null)
+                .study(study)
                 .build();
 
         this.userRepository.save(userEntity);
@@ -103,6 +114,17 @@ public class UserEntityService {
     public List<UserEntity> createOrSaveFromCSV(){
 
         return null;
+    }
+
+    public boolean checkIfExistByNif(String nif){
+        return this.userRepository.findByDniNie(nif);
+    }
+
+
+    public Optional<UserEntity> findByNif(String nif){
+        return Optional.ofNullable(this.userRepository.getByNif(nif).orElseThrow(
+                () -> new UsernameNotFoundException("the user with nif " + nif + " isn`t registered in data base."))
+        );
     }
 
 

@@ -21,4 +21,8 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
 
     @Query("select u from UserEntity u")
     List<UserEntity> getList();
+
+    boolean findByDniNie(String dniNie);
+    @Query("select u from UserEntity u where u.dniNie = '?1'")
+    Optional<UserEntity> getByNif(String nif);
 }
