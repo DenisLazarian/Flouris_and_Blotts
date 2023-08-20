@@ -3,6 +3,7 @@ package com.web.app.flourishandblotts.services;
 import com.web.app.flourishandblotts.models.ERole;
 import com.web.app.flourishandblotts.models.RoleEntity;
 import com.web.app.flourishandblotts.repositories.RoleRepository;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -10,6 +11,7 @@ import java.util.Set;
 
 @Service
 public class RoleService {
+    @Resource
     private RoleRepository roleRepository;
 
     public Set<RoleEntity> findByRole(ERole name){

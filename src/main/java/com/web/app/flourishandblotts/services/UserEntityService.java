@@ -1,16 +1,12 @@
 package com.web.app.flourishandblotts.services;
 
 import com.web.app.flourishandblotts.controllers.request.CreateUserDTO;
-import com.web.app.flourishandblotts.models.ERole;
-import com.web.app.flourishandblotts.models.RoleEntity;
-import com.web.app.flourishandblotts.models.Study;
-import com.web.app.flourishandblotts.models.UserEntity;
+import com.web.app.flourishandblotts.models.*;
 import com.web.app.flourishandblotts.repositories.RoleRepository;
 import com.web.app.flourishandblotts.repositories.StudyRepository;
 import com.web.app.flourishandblotts.repositories.UserRepository;
 import jakarta.annotation.Resource;
 
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +28,9 @@ public class UserEntityService {
     @Resource
     private StudyRepository studyRepository;
 
+    @Resource
+    private ProfessionFamilyService professionFamilyService;
+
 
     public UserEntity createUser(CreateUserDTO createUserDTO){
         Set<RoleEntity> roles = createUserDTO.getRoles().stream()
@@ -49,6 +48,9 @@ public class UserEntityService {
                         return this.studyRepository.save(newStudy);
                     });
 
+        ProfessionFamily professionFamily = this.professionFamilyService.findByName(createUserDTO.getProfFamilyName());
+        ProfessionFamily typeTeacher = this.professionFamilyService.findByName(createUserDTO.getTeacherType());
+
         UserEntity userEntity = UserEntity.builder()
                 .dniNie(createUserDTO.getDni_nie())
                 .password(this.passwordEncoder.encode(createUserDTO.getPassword()))
@@ -61,6 +63,8 @@ public class UserEntityService {
                 .roles(roles)
                 .penalization(null)
                 .study(study)
+                .profFamilyName(professionFamily)
+                .teacherType(typeTeacher)
                 .build();
 
         this.userRepository.save(userEntity);
@@ -111,20 +115,15 @@ public class UserEntityService {
         return u;
     }
 
-    public List<UserEntity> createOrSaveFromCSV(){
-
-        return null;
-    }
 
     public boolean checkIfExistByNif(String nif){
-        return this.userRepository.findByDniNie(nif);
+        return this.userRepository.findByDniNie(nif).isPresent();
     }
 
 
     public Optional<UserEntity> findByNif(String nif){
-        return Optional.ofNullable(this.userRepository.getByNif(nif).orElseThrow(
-                () -> new UsernameNotFoundException("the user with nif " + nif + " isn`t registered in data base."))
-        );
+        System.out.println(nif);
+        return this.userRepository.getByNif(nif);
     }
 
 

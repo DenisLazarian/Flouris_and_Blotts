@@ -3,6 +3,7 @@ package com.web.app.flourishandblotts.repositories;
 import com.web.app.flourishandblotts.models.UserEntity;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
     @Query("select u from UserEntity u")
     List<UserEntity> getList();
 
-    boolean findByDniNie(String dniNie);
-    @Query("select u from UserEntity u where u.dniNie = '?1'")
-    Optional<UserEntity> getByNif(String nif);
+    Optional<UserEntity> findByDniNie(String dniNie);
+    @Query("select u from UserEntity u where u.dniNie = :nif")
+    Optional<UserEntity> getByNif(@Param("nif") String nif);
 }

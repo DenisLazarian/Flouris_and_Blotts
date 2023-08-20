@@ -1,7 +1,6 @@
 package com.web.app.flourishandblotts.controllers.request;
 
 import com.web.app.flourishandblotts.models.Penalization;
-import com.web.app.flourishandblotts.models.Study;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -44,6 +43,10 @@ public class CreateUserDTO {
     private String study;
 
     private String name_course;
+
+    private String profFamilyName;
+
+    private String teacherType;
 
 
 

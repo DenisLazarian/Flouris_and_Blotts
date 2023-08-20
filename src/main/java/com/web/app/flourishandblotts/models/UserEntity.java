@@ -81,10 +81,11 @@ public class UserEntity {
     @ManyToOne(targetEntity = Study.class)
     private Study study;
 
+    @ManyToOne(targetEntity = ProfessionFamily.class)
+    private ProfessionFamily profFamilyName;
 
-    private String profFamilyName;
-
-    private String teacherType;
+    @ManyToOne(targetEntity = ProfessionFamily.class)
+    private ProfessionFamily teacherType;
 
     /*
     * Obtaining the role of the user.
