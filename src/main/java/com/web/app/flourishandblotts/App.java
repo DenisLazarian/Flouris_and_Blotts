@@ -2,11 +2,11 @@ package com.web.app.flourishandblotts;
 
 import com.web.app.flourishandblotts.models.ERole;
 import com.web.app.flourishandblotts.models.RoleEntity;
-import com.web.app.flourishandblotts.models.Study;
 import com.web.app.flourishandblotts.models.UserEntity;
 import com.web.app.flourishandblotts.repositories.UserRepository;
-import com.web.app.flourishandblotts.services.BookService;
 import jakarta.annotation.Resource;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -15,6 +15,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Objects;
 import java.util.Set;
 
@@ -34,13 +38,18 @@ public class App {
     @Resource
     PasswordEncoder passwordEncoder;
 
-    @Resource
-    BookService bookService;
 
 
 
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
+
+        try {
+            getApiBooks();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     @Bean
@@ -53,7 +62,32 @@ public class App {
             ){
                 this.creatingUsers();
             }
+
         };
+    }
+
+    private static void getApiBooks() throws IOException {
+
+        URL url = new URL("https://www.googleapis.com/books/v1/volumes?q=subject:Mystery+adventure&maxResults=40");
+        HttpURLConnection cx = (HttpURLConnection) url.openConnection();
+
+        cx.setRequestMethod("GET");
+        InputStream strm = cx.getInputStream();
+        byte[] arrStream = strm.readAllBytes();
+
+        StringBuilder cntJson= new StringBuilder();
+
+        for(byte tmp: arrStream)
+            cntJson.append((char) tmp);
+
+
+        Object items = new JSONObject(cntJson.toString()).get("items");
+
+
+//        System.out.println(cntJson);
+        JSONArray json = new JSONArray(items.toString());
+        for(Object obj: json)
+            System.out.println(((JSONObject)obj).get("id"));
     }
 
     public void creatingUsers(){
