@@ -49,7 +49,8 @@ public class SecurityConfig {
                             "/hello",
                             "/login",
                             "user/**",
-                            "file/**"
+                            "file/**",
+                            "/books/api/data"
                     ).permitAll();
                     auth.anyRequest().authenticated(); // here we specify the application to not allow any request to use, except the uris specified previously
                 })

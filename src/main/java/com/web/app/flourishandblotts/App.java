@@ -5,6 +5,7 @@ import com.web.app.flourishandblotts.models.RoleEntity;
 import com.web.app.flourishandblotts.models.Study;
 import com.web.app.flourishandblotts.models.UserEntity;
 import com.web.app.flourishandblotts.repositories.UserRepository;
+import com.web.app.flourishandblotts.services.BookService;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -32,6 +33,9 @@ public class App {
 
     @Resource
     PasswordEncoder passwordEncoder;
+
+    @Resource
+    BookService bookService;
 
 
 

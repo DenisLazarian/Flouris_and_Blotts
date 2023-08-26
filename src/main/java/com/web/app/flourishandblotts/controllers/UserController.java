@@ -68,11 +68,11 @@ public class UserController {
         return ResponseEntity.ok(userList);
     }
 
-    @PostMapping("/read-csv")
-    public ResponseEntity<?> readCSV(){
-        this.userService.createOrSaveFromCSV();
-        return null;
-    }
+//    @PostMapping("/read-csv")
+//    public ResponseEntity<?> readCSV(){
+//        this.userService.createOrSaveFromCSV();
+//        return null;
+//    }
 
 
     @PostMapping("prove/file")
