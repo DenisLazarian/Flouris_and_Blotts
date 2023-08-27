@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;
 import java.util.Set;
 
 @Data
@@ -19,7 +18,7 @@ public class CreateBookDTO {
 
     private String subtitle;
 
-    private Date datePublished;
+    private String datePublished;
 
     private int pageNumber;
 

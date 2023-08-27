@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -47,7 +48,7 @@ public class App {
         try {
             getApiBooks();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("Algun elemento puede faltar");
         }
 
     }
@@ -66,7 +67,7 @@ public class App {
         };
     }
 
-    private static void getApiBooks() throws IOException {
+    private static  void getApiBooks() throws IOException {
 
         URL url = new URL("https://www.googleapis.com/books/v1/volumes?q=subject:Mystery+adventure&maxResults=40");
         HttpURLConnection cx = (HttpURLConnection) url.openConnection();
@@ -83,11 +84,64 @@ public class App {
 
         Object items = new JSONObject(cntJson.toString()).get("items");
 
-
 //        System.out.println(cntJson);
         JSONArray json = new JSONArray(items.toString());
-        for(Object obj: json)
-            System.out.println(((JSONObject)obj).get("id"));
+        for(Object obj: json){
+
+//            System.out.println(((JSONObject)obj).get("id"));
+//            System.out.println(((JSONObject) obj).get("volumeInfo"));
+
+            JSONObject volumeInfo = new JSONObject(((JSONObject) obj).get("volumeInfo").toString());
+//            JSONArray setVolumeInfo = new JSONArray((volumeInfo.toString()));
+
+            String title = volumeInfo.get("title").toString();
+
+
+            String subtitle = volumeInfo.has("subtitle") ?
+                    volumeInfo.get("subtitle").toString() : null;
+
+            String datePublished = volumeInfo.get("publishedDate").toString();
+            String pageNumber = volumeInfo.has("pageCount") ?
+                    volumeInfo.get("pageCount").toString() : null;
+            String description = volumeInfo.has("description") ?
+                    volumeInfo.get("description").toString() : null;
+
+            String thumbnail = null;
+
+            if(volumeInfo.has("imageLinks")){
+                JSONObject thumbnailSet = new JSONObject(volumeInfo.get("imageLinks").toString());
+                thumbnail = thumbnailSet.get("thumbnail").toString();
+            }
+
+            String editorial = volumeInfo.has("publisher") ?
+                    volumeInfo.get("publisher").toString(): null;
+
+            String language = volumeInfo.has("language") ?
+                    volumeInfo.get("language").toString() : null;
+
+
+            Set<String> categories = null;
+
+            if(volumeInfo.has("categories")){
+                categories = new HashSet<>();
+                JSONArray catList = new JSONArray(volumeInfo.get("categories").toString());
+                for(Object category: catList)
+                    categories.add(category.toString());
+            }
+
+//            System.out.println(categories != null ? categories.size(): "no");
+
+            Set<String> authors = null;
+
+            if(volumeInfo.has("authors")){
+                authors = new HashSet<>();
+                JSONArray authorsList = new JSONArray(volumeInfo.get("authors").toString());
+                for (Object author: authorsList)
+                    authors.add(author.toString());
+            }
+
+//            System.out.println(authors != null ? authors.size(): "no");
+        }
     }
 
     public void creatingUsers(){
