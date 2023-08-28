@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
-import java.sql.Date;
 import java.util.Set;
 
 @Data
@@ -23,13 +22,15 @@ public class BookEntity {
     private String isbn_13;
 
 
-    @Column(unique = true) @NotBlank
+//    @Column(unique = true)
+    @NotBlank
     private String title;
 
-    @Column(unique = true) @NotBlank
+//    @Column(unique = true)
+    @NotBlank
     private String subtitle;
 
-    private Date datePublished;
+    private String datePublished;
 
     private int pageNumber;
 
@@ -38,7 +39,7 @@ public class BookEntity {
     private String description;
 
 
-    private String imageFile;
+    private String thumbnail;
 
     @ManyToOne(targetEntity = Language.class)
     private Language language;

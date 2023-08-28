@@ -24,7 +24,7 @@ public class CreateBookDTO {
 
     private String description;
 
-    private String imageFile;
+    private String thumbnail;
 
     private String language;
 

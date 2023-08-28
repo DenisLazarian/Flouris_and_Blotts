@@ -1,9 +1,11 @@
 package com.web.app.flourishandblotts;
 
+import com.web.app.flourishandblotts.controllers.request.CreateBookDTO;
 import com.web.app.flourishandblotts.models.ERole;
 import com.web.app.flourishandblotts.models.RoleEntity;
 import com.web.app.flourishandblotts.models.UserEntity;
 import com.web.app.flourishandblotts.repositories.UserRepository;
+import com.web.app.flourishandblotts.services.BookService;
 import jakarta.annotation.Resource;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -39,18 +41,14 @@ public class App {
     @Resource
     PasswordEncoder passwordEncoder;
 
+    @Resource
+    BookService bookService;
+
 
 
 
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
-
-        try {
-            getApiBooks();
-        } catch (IOException e) {
-            System.out.println("Algun elemento puede faltar");
-        }
-
     }
 
     @Bean
@@ -62,12 +60,16 @@ public class App {
                     Objects.equals(environmentStatus, "create")
             ){
                 this.creatingUsers();
+
+
+                    this.getApiBooks();
+
             }
 
         };
     }
 
-    private static  void getApiBooks() throws IOException {
+    private void getApiBooks() throws IOException {
 
         URL url = new URL("https://www.googleapis.com/books/v1/volumes?q=subject:Mystery+adventure&maxResults=40");
         HttpURLConnection cx = (HttpURLConnection) url.openConnection();
@@ -129,8 +131,6 @@ public class App {
                     categories.add(category.toString());
             }
 
-//            System.out.println(categories != null ? categories.size(): "no");
-
             Set<String> authors = null;
 
             if(volumeInfo.has("authors")){
@@ -140,7 +140,35 @@ public class App {
                     authors.add(author.toString());
             }
 
-//            System.out.println(authors != null ? authors.size(): "no");
+            JSONArray industryIdentifiers = new JSONArray(volumeInfo.get("industryIdentifiers").toString());
+            String isbn_13 = null;
+
+            for(Object ident : industryIdentifiers){
+                JSONObject it = new JSONObject(ident.toString());
+
+                if(it.has("type") &&
+                        it.get("type").toString().equalsIgnoreCase("ISBN_13")){
+                    isbn_13 = it.get("identifier").toString();
+                }
+            }
+            if(isbn_13 != null && bookService.findTitleRepeated(title) == null){
+
+                CreateBookDTO createBookDTO = CreateBookDTO.builder()
+                        .isbn_13(isbn_13)
+                        .title(title)
+                        .subtitle(subtitle)
+                        .datePublished(datePublished)
+                        .pageNumber(pageNumber!= null ? Integer.parseInt(pageNumber): 0)
+                        .description(description)
+                        .thumbnail(thumbnail)
+                        .language(language)
+                        .editorial(editorial)
+                        .categories(categories)
+                        .authors(authors)
+                .build();
+
+                this.bookService.createBook(createBookDTO);
+            }
         }
     }
 
