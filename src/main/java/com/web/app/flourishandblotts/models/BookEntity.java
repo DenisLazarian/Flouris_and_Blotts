@@ -1,5 +1,7 @@
 package com.web.app.flourishandblotts.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -41,15 +43,26 @@ public class BookEntity {
 
     private String thumbnail;
 
-    @ManyToOne(targetEntity = Language.class)
+    @JsonIgnore(value = false)
+    @ManyToOne(
+            targetEntity = Language.class,
+            fetch = FetchType.EAGER
+    )
+    @JsonManagedReference
     private Language language;
 
-    @ManyToOne(targetEntity = Editorial.class)
+    @JsonIgnore(value = false)
+    @ManyToOne(
+            targetEntity = Editorial.class,
+            fetch = FetchType.EAGER
+    )
+    @JsonManagedReference
     private Editorial editorial;
 
+    @JsonIgnore(value = false)
     @ManyToMany(
             targetEntity = Category.class,
-            fetch = FetchType.LAZY
+            fetch = FetchType.EAGER
     )
     @JoinTable(
             name = "book_category",
@@ -60,9 +73,10 @@ public class BookEntity {
 
 
 
+    @JsonIgnore(value = false)
     @ManyToMany(
             targetEntity = Author.class,
-            fetch = FetchType.LAZY
+            fetch = FetchType.EAGER
     )
     @JoinTable(
             name = "book_author",

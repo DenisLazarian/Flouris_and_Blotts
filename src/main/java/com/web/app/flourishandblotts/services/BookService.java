@@ -6,6 +6,7 @@ import com.web.app.flourishandblotts.repositories.*;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -98,7 +99,9 @@ public class BookService {
     }
 
     public List<BookEntity> listBooks(){
-        return this.bookRepository.listBooks();
+        if(this.bookRepository.listBooks().isEmpty())
+            return Collections.emptyList();
+        return this.bookRepository.listBooks().get();
     }
 
     public BookEntity findTitleRepeated(String title) {

@@ -1,8 +1,8 @@
 package com.web.app.flourishandblotts.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -21,6 +21,7 @@ public class Language {
     private String name;
 
     @OneToMany(targetEntity = BookEntity.class, mappedBy = "language")
+    @JsonBackReference
     private List<BookEntity> book;
 
 }
