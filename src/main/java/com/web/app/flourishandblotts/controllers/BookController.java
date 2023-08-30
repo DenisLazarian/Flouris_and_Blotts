@@ -25,7 +25,7 @@ public class BookController {
         Map<String, Object> response = new HashMap<>();
 ////        if(this.bookService.listBooks().size() > 0){
             response.put("status", "200");
-            response.put("message", "List of Users");
+            response.put("message", "List of books");
             response.put("response", this.bookService.listBooks());
 //
 //            return ResponseEntity.ok(response);
