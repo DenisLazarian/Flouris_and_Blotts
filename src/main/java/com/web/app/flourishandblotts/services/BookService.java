@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+
 @Service
 public class BookService {
 
@@ -102,6 +103,12 @@ public class BookService {
         if(this.bookRepository.listBooks().isEmpty())
             return Collections.emptyList();
         return this.bookRepository.listBooks().get();
+    }
+
+    public BookEntity showBook(long id){
+        if(this.bookRepository.findById(id).isEmpty()) return null;
+
+        return this.bookRepository.findById(id).get();
     }
 
     public BookEntity findTitleRepeated(String title) {

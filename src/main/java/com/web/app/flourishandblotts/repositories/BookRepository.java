@@ -16,4 +16,6 @@ public interface BookRepository extends CrudRepository<BookEntity, Long> {
     @Query("select b from BookEntity b")
     Optional<List<BookEntity>> listBooks();
 
+    Optional<BookEntity> findById(long id);
+
 }
