@@ -2,6 +2,8 @@ package com.web.app.flourishandblotts.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.web.app.flourishandblotts.controllers.response.BookSerializer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -15,6 +17,7 @@ import java.util.Set;
 @Entity
 @Table(name = "book")
 @Getter @Setter @ToString
+@JsonSerialize(using = BookSerializer.class)
 public class BookEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +37,7 @@ public class BookEntity {
 
     private String datePublished;
 
-    private int pageNumber;
+    private Integer pageNumber;
 
 
     @Column(columnDefinition = "TEXT")
@@ -43,23 +46,23 @@ public class BookEntity {
 
     private String thumbnail;
 
-    @JsonIgnore(value = false)
+//    @JsonIgnore(value = false)
     @ManyToOne(
             targetEntity = Language.class,
             fetch = FetchType.EAGER
     )
-    @JsonManagedReference
+//    @JsonManagedReference
     private Language language;
 
-    @JsonIgnore(value = false)
+//    @JsonIgnore(value = false)
     @ManyToOne(
             targetEntity = Editorial.class,
             fetch = FetchType.EAGER
     )
-    @JsonManagedReference
+//    @JsonManagedReference
     private Editorial editorial;
 
-    @JsonIgnore(value = false)
+//    @JsonIgnore(value = false)
     @ManyToMany(
             targetEntity = Category.class,
             fetch = FetchType.EAGER
@@ -73,7 +76,7 @@ public class BookEntity {
 
 
 
-    @JsonIgnore(value = false)
+//    @JsonIgnore(value = false)
     @ManyToMany(
             targetEntity = Author.class,
             fetch = FetchType.EAGER

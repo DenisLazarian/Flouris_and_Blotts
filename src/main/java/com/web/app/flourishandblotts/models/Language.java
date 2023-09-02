@@ -1,6 +1,5 @@
 package com.web.app.flourishandblotts.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,7 +20,7 @@ public class Language {
     private String name;
 
     @OneToMany(targetEntity = BookEntity.class, mappedBy = "language")
-    @JsonBackReference
+//    @JsonBackReference
     private List<BookEntity> book;
 
 }

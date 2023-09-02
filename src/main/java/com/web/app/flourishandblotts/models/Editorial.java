@@ -23,7 +23,7 @@ public class Editorial {
     private String name;
 
     @OneToMany(targetEntity = BookEntity.class, mappedBy = "editorial")
-    @JsonBackReference
+//    @JsonBackReference
     private Set<BookEntity> book;
 
 

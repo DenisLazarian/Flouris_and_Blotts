@@ -30,10 +30,17 @@ public class CorsConfig {
 //                        .allowedHeaders("Authorization", "Content-Type")
                         .maxAge(3600);
                 registry.addMapping("/book/**")
-//                        .allowedOrigins("http://localhost:4200")
+                        .allowedOrigins("http://localhost:4200")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
 //                        .allowedHeaders("Authorization", "Content-Type")
                         .maxAge(3600);
+
+                registry.addMapping("/login")
+                        .allowedOrigins("http://localhost:4200")
+                        .allowedMethods("POST")
+                        .exposedHeaders("*");
+//                        .allowedHeaders("Authorization", "Content-Type")
+//                        .maxAge(3600);
             }
         };
     }
