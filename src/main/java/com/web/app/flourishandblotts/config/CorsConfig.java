@@ -4,14 +4,15 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@SpringBootApplication
+@Configuration
 public class CorsConfig {
-    public static void main(String[] args) {
-        SpringApplication.run(CorsConfig.class, args);
-    }
+//    public static void main(String[] args) {
+//        SpringApplication.run(CorsConfig.class, args);
+//    }
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
@@ -21,7 +22,11 @@ public class CorsConfig {
                 registry.addMapping("/user/**")
                         .allowedOrigins("http://localhost:4200")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-//                        .allowedHeaders("Authorization", "Content-Type")
+                        .allowedHeaders(
+                                "Authorization",
+                                "Content-Type",
+                                "Access-Control-Allow-Origin"
+                        )
                         .maxAge(3600);
 
                 registry.addMapping("/file/**")
@@ -37,9 +42,10 @@ public class CorsConfig {
 
                 registry.addMapping("/login")
                         .allowedOrigins("http://localhost:4200")
-                        .allowedMethods("POST")
-                        .exposedHeaders("*");
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
+//                        .exposedHeaders("*")
 //                        .allowedHeaders("Authorization", "Content-Type")
+//                        .allowedHeaders("Access-Control-Allow-Origin", "*");
 //                        .maxAge(3600);
             }
         };

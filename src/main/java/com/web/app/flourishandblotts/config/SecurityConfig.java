@@ -5,6 +5,7 @@ import com.web.app.flourishandblotts.config.filters.JwtAuthorizationFilter;
 import com.web.app.flourishandblotts.config.jwt.JwtUtils;
 import com.web.app.flourishandblotts.services.UserDetailsServiceImpl;
 import jakarta.annotation.Resource;
+import jakarta.servlet.Filter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,6 +33,9 @@ public class SecurityConfig {
     @Resource
     JwtAuthorizationFilter authorizationFilter;
 
+    @Resource
+    CorsConfig configCors;
+
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(this.jwtUtils);
@@ -40,14 +44,17 @@ public class SecurityConfig {
         jwtAuthenticationFilter.setAuthenticationManager(authenticationManager);
         jwtAuthenticationFilter.setFilterProcessesUrl("/login");
 
+
+
         return http
+                .cors().and()
                 .csrf(AbstractHttpConfigurer::disable)  // config -> config.disable()
                 .authorizeHttpRequests(auth->{
                     // manage routing by permission
                     auth.requestMatchers( // here we allow without authentication or any filer, to user this uris
                             "/hello",
-                            "/login",
-                            "user/**",
+//                            "/login",
+//                            "user/**",
                             "file/**",
                             "book/**"
                     ).permitAll();
@@ -56,6 +63,7 @@ public class SecurityConfig {
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilter(jwtAuthenticationFilter)
                 .addFilterBefore(this.authorizationFilter, UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore((Filter) this.configCors, (Class<? extends Filter>) CorsConfig.class)
                 .build();
     }
 

@@ -22,8 +22,29 @@ public class BookSerializer extends JsonSerializer<BookEntity> {
         jsonGenerator.writeStringField("pageNumber", bookEntity.getPageNumber().toString());
         jsonGenerator.writeStringField("description", bookEntity.getDescription());
         jsonGenerator.writeStringField("thumbnail", bookEntity.getThumbnail());
-        jsonGenerator.writeObjectField("language", bookEntity.getLanguage().getName());
-        jsonGenerator.writeObjectField("editorial", bookEntity.getEditorial().getName());
+
+
+//        jsonGenerator.writeObjectField("language", bookEntity.getLanguage().getName());
+        jsonGenerator.writeFieldName("language");
+        jsonGenerator.writeStartArray();
+
+        jsonGenerator.writeStartObject();
+        jsonGenerator.writeStringField("id", bookEntity.getLanguage().getId().toString());
+        jsonGenerator.writeStringField("name", bookEntity.getLanguage().getName());
+        jsonGenerator.writeEndObject();
+
+        jsonGenerator.writeEndArray();
+
+
+        jsonGenerator.writeFieldName("editorial");
+        jsonGenerator.writeStartArray();
+        jsonGenerator.writeStartObject();
+        jsonGenerator.writeStringField("id", bookEntity.getEditorial().getId().toString());
+        jsonGenerator.writeStringField("name", bookEntity.getEditorial().getName());
+        jsonGenerator.writeEndObject();
+        jsonGenerator.writeEndArray();
+
+//        jsonGenerator.writeObjectField("editorial", bookEntity.getEditorial().getName());
 
         // List of categories
         jsonGenerator.writeFieldName("categories");
@@ -36,7 +57,7 @@ public class BookSerializer extends JsonSerializer<BookEntity> {
         }
         jsonGenerator.writeEndArray();
 
-   jsonGenerator.writeFieldName("authors");
+        jsonGenerator.writeFieldName("authors");
         jsonGenerator.writeStartArray();
         for(Author author: bookEntity.getAuthors()){
             jsonGenerator.writeStartObject();
