@@ -1,41 +1,50 @@
 package com.web.app.flourishandblotts.controllers;
 
-import com.web.app.flourishandblotts.controllers.request.ApiResponseObjectBook;
 import com.web.app.flourishandblotts.controllers.request.CreateBookDTO;
+import com.web.app.flourishandblotts.models.BookEntity;
 import com.web.app.flourishandblotts.services.BookService;
-import com.web.app.flourishandblotts.services.ExternalApiService;
 import jakarta.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
-@RequestMapping("books")
+@RequestMapping("book")
 public class BookController {
-
-    private final ExternalApiService externalApiService;
-
-    @Autowired
-    public BookController(ExternalApiService externalApiService) {
-        this.externalApiService = externalApiService;
-    }
-
-    @GetMapping("/api/data")
-    public ApiResponseObjectBook getDataFromExternalApi() {
-        return externalApiService.getApiResponse();
-    }
-
     @Resource
-    BookService bookService;
+    private BookService bookService;
 
-    @GetMapping("exampleBooks")
-    public CreateBookDTO getExampleBooks(){
-        return bookService.searchBooks();
+    @GetMapping("/list")
+    public ResponseEntity<Map<String, Object>> bookList(){
+        Map<String, Object> response = new HashMap<>();
+        if(this.bookService.listBooks().size() > 0){
+            response.put("status", "200");
+            response.put("message", "List of books");
+            response.put("response", this.bookService.listBooks());
+//
+            return ResponseEntity.ok(response);
+        }else return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("create")
+    public BookEntity createBook(CreateBookDTO createBookDTO){
+        return this.bookService.createBook(createBookDTO);
+    }
+
+    @GetMapping("/show/{id}")
+    public ResponseEntity<Map<String, Object>> showBook( @PathVariable("id") String id ){
+        Map<String, Object> response = new HashMap<>();
+
+        BookEntity bookSearched = this.bookService.showBook(Long.parseLong(id));
+        if( bookSearched != null){
+            response.put("status", "200");
+            response.put("message", "Book with title "+ bookSearched.getTitle() +" searched with exit");
+            response.put("response", bookSearched);
+
+            return ResponseEntity.ok(response);
+        }else
+            return ResponseEntity.notFound().build();
+    }
 }

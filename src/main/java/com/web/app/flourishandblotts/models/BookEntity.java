@@ -1,10 +1,13 @@
 package com.web.app.flourishandblotts.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.web.app.flourishandblotts.controllers.response.BookSerializer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
-import java.sql.Date;
 import java.util.Set;
 
 @Data
@@ -14,6 +17,7 @@ import java.util.Set;
 @Entity
 @Table(name = "book")
 @Getter @Setter @ToString
+@JsonSerialize(using = BookSerializer.class)
 public class BookEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,32 +27,45 @@ public class BookEntity {
     private String isbn_13;
 
 
-    @Column(unique = true) @NotBlank
+//    @Column(unique = true)
+    @NotBlank
     private String title;
 
-    @Column(unique = true) @NotBlank
+//    @Column(unique = true)
+    @NotBlank
     private String subtitle;
 
-    private Date datePublished;
+    private String datePublished;
 
-    private int pageNumber;
+    private Integer pageNumber;
 
 
     @Column(columnDefinition = "TEXT")
     private String description;
 
 
-    private String imageFile;
+    private String thumbnail;
 
-    @ManyToOne(targetEntity = Language.class)
+//    @JsonIgnore(value = false)
+    @ManyToOne(
+            targetEntity = Language.class,
+            fetch = FetchType.EAGER
+    )
+//    @JsonManagedReference
     private Language language;
 
-    @ManyToOne(targetEntity = Editorial.class)
+//    @JsonIgnore(value = false)
+    @ManyToOne(
+            targetEntity = Editorial.class,
+            fetch = FetchType.EAGER
+    )
+//    @JsonManagedReference
     private Editorial editorial;
 
+//    @JsonIgnore(value = false)
     @ManyToMany(
             targetEntity = Category.class,
-            fetch = FetchType.LAZY
+            fetch = FetchType.EAGER
     )
     @JoinTable(
             name = "book_category",
@@ -59,9 +76,10 @@ public class BookEntity {
 
 
 
+//    @JsonIgnore(value = false)
     @ManyToMany(
             targetEntity = Author.class,
-            fetch = FetchType.LAZY
+            fetch = FetchType.EAGER
     )
     @JoinTable(
             name = "book_author",

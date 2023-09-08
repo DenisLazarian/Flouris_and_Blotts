@@ -5,6 +5,7 @@ import com.web.app.flourishandblotts.config.filters.JwtAuthorizationFilter;
 import com.web.app.flourishandblotts.config.jwt.JwtUtils;
 import com.web.app.flourishandblotts.services.UserDetailsServiceImpl;
 import jakarta.annotation.Resource;
+import jakarta.servlet.Filter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,7 +18,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -33,6 +33,9 @@ public class SecurityConfig {
     @Resource
     JwtAuthorizationFilter authorizationFilter;
 
+    @Resource
+    CorsConfig configCors;
+
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(this.jwtUtils);
@@ -41,22 +44,26 @@ public class SecurityConfig {
         jwtAuthenticationFilter.setAuthenticationManager(authenticationManager);
         jwtAuthenticationFilter.setFilterProcessesUrl("/login");
 
+
+
         return http
+                .cors().and()
                 .csrf(AbstractHttpConfigurer::disable)  // config -> config.disable()
                 .authorizeHttpRequests(auth->{
                     // manage routing by permission
                     auth.requestMatchers( // here we allow without authentication or any filer, to user this uris
                             "/hello",
-                            "/login",
-                            "user/**",
+//                            "/login",
+//                            "user/**",
                             "file/**",
-                            "/books/api/data"
+                            "book/**"
                     ).permitAll();
                     auth.anyRequest().authenticated(); // here we specify the application to not allow any request to use, except the uris specified previously
                 })
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilter(jwtAuthenticationFilter)
                 .addFilterBefore(this.authorizationFilter, UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore((Filter) this.configCors, (Class<? extends Filter>) CorsConfig.class)
                 .build();
     }
 

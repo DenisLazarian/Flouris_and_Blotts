@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -75,5 +76,24 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.getWriter().flush();
 
         super.successfulAuthentication(request, response, chain, authResult);
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        // Personaliza la respuesta en caso de autenticación fallida
+        // Puedes crear un objeto de respuesta personalizado
+//        ErrorResponse errorResponse = new ErrorResponse("Error de autenticación", "Credenciales incorrectas");
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("message", failed.getMessage());
+        // Convierte el objeto de respuesta en JSON
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonResponse = objectMapper.writeValueAsString(errorResponse);
+
+        // Establece el código de estado y el tipo de contenido en la respuesta
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+
+        // Escribe la respuesta JSON en el cuerpo de la respuesta
+        response.getWriter().write(jsonResponse);
     }
 }
