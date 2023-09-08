@@ -44,9 +44,6 @@ public class App {
     @Resource
     BookService bookService;
 
-
-
-
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
     }
@@ -232,10 +229,4 @@ public class App {
 
         this.userRepository.save(admin);
     }
-
-
-
-
-
-
 }

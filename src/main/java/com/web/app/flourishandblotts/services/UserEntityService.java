@@ -31,6 +31,11 @@ public class UserEntityService {
     @Resource
     private ProfessionFamilyService professionFamilyService;
 
+    public UserEntity findByMail(String mail){
+        if(this.userRepository.findByMail(mail).isEmpty()) return null;
+        return this.userRepository.findByMail(mail).get();
+    }
+
 
     public UserEntity createUser(CreateUserDTO createUserDTO){
         Set<RoleEntity> roles = createUserDTO.getRoles().stream()
