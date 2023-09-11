@@ -54,7 +54,7 @@ public class SecurityConfig {
                     auth.requestMatchers( // here we allow without authentication or any filer, to user this uris
                             "/hello",
 //                            "/login",
-//                            "user/**",
+                            "user/role",
                             "file/**",
                             "book/**"
                     ).permitAll();

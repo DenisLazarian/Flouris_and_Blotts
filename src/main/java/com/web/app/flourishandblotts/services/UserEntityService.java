@@ -135,19 +135,30 @@ public class UserEntityService {
     }
 
 
-    public boolean checkRole(String role, String bearer) {
 
-        String token = bearer.split("\\s")[1];
+    public boolean checkRole(String[] roles, String bearer) {
+        String token = bearer.split(" ")[1];
         String mail = this.jwtUtils.getUsernameFromToken(token);
-        boolean hasRole = false;
 
-        if(this.userRepository.checkRole(mail).isPresent() &&
-            !this.userRepository.checkRole(mail).get().isEmpty()){
+        if(roles.length==0) return true;
+
+        Optional<Set<RoleEntity>> rolesDB = this.userRepository.checkRole(mail);
+
+        if(rolesDB.isPresent() &&
+            !rolesDB.get().isEmpty()){
             System.out.println("Ressponse");
-            System.out.println(this.userRepository.checkRole(mail).get());
+            System.out.println(rolesDB.get());
 
+            Set<RoleEntity> rolesHas = new HashSet<>(rolesDB.get());
+
+            for (RoleEntity role: rolesHas) {
+                for (String s : roles) {
+                    if (role.getName().name().equalsIgnoreCase(s)) {
+                        return true;
+                    }
+                }
+            }
         }
-
         return false;
     }
 }

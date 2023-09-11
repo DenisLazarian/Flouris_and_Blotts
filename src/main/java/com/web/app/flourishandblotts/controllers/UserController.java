@@ -11,6 +11,9 @@ import lombok.AllArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -38,6 +41,7 @@ public class UserController {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('ADMIN_PRICIPAL')")
     public ResponseEntity<?> createUser(@RequestBody @Valid CreateUserDTO createUserDTO){
         return ResponseEntity.ok(this.userService.createUser(createUserDTO));
     }
@@ -65,6 +69,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}") // we use Put if we modify all properties of an object. In case we don't need to change all properties, we use a PATCH.
+    @PreAuthorize("hasRole('ADMIN_PRICIPAL')")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody @Valid UserEntity userEntity){
 
         if(this.userRepository.getById(id).isEmpty()) return ResponseEntity.notFound().build();
@@ -75,12 +80,14 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN_PRICIPAL')")
     public ResponseEntity<?> deleteUser(@PathVariable Long id){
         this.userService.deleteUser(id);
         return ResponseEntity.ok().body("User deleted with exit.");
     }
 
     @GetMapping("/list")
+    @PreAuthorize("hasRole('ADMIN_PRICIPAL')")
     public ResponseEntity<?> listUser() {
         List<UserEntity> userList= this.userService.list();
         return ResponseEntity.ok(userList);
@@ -92,10 +99,48 @@ public class UserController {
         return ResponseEntity.ok(algo);
     }
 
-    @GetMapping("role")
-    public boolean checkRole(@RequestBody String role, @RequestHeader("Authorization") String bearer){
-        return (boolean) this.userService.checkRole(role,bearer);
-    }
+//    @GetMapping("role")
+//    public ResponseEntity<Map<String, Object>> checkRole(@RequestParam String[] roles, @RequestHeader("Authorization") String bearer){
+//
+//        System.out.println(roles.length);
+//
+//        Map<String, Object> response = new HashMap<>();
+//
+//
+//        response.put("message", "Checking role");
+//        response.put("response", this.userService.checkRole(roles,bearer));
+//
+//        return  ResponseEntity.ok(response);
+//    }
 
+    @GetMapping("role")
+    public ResponseEntity<Map<String,Object>> getUserRole() {
+        // Obtiene la autenticación actual
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("--auth--");
+        System.out.println(authentication);
+
+        Map<String,Object> response = new HashMap<>();
+
+        // Verifica si el usuario está autenticado
+        if (authentication != null && authentication.isAuthenticated()) {
+            String rolObtained = authentication.getAuthorities().stream()
+                    .map(Object::toString)
+                    .findFirst()
+                    .orElse("USER_READER");
+
+
+            response.put("message", "User roles");
+            response.put("response", rolObtained);
+
+            return ResponseEntity.ok(response);
+                     // En caso de que no se encuentren roles, se asume ROLE_USER
+        }
+
+        // Si no hay usuario autenticado, se devuelve un valor predeterminado
+        response.put("message", "Not authenticated");
+        response.put("response", "ANONYMOUS");
+        return ResponseEntity.ok(response);
+    }
 
 }

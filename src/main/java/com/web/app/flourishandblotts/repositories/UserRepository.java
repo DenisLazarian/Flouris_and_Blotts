@@ -1,5 +1,6 @@
 package com.web.app.flourishandblotts.repositories;
 
+import com.web.app.flourishandblotts.models.RoleEntity;
 import com.web.app.flourishandblotts.models.UserEntity;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -30,5 +31,5 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
     Optional<UserEntity> getByNif(@Param("nif") String nif);
 
     @Query("select u.roles from UserEntity u inner join u.roles r where u.mail = :mail")
-    Optional<Set<UserEntity>> checkRole(String mail);
+    Optional<Set<RoleEntity>> checkRole(String mail);
 }
