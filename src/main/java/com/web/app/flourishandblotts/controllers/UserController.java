@@ -92,5 +92,10 @@ public class UserController {
         return ResponseEntity.ok(algo);
     }
 
+    @GetMapping("role")
+    public boolean checkRole(@RequestBody String role, @RequestHeader("Authorization") String bearer){
+        return (boolean) this.userService.checkRole(role,bearer);
+    }
+
 
 }

@@ -1,5 +1,6 @@
 package com.web.app.flourishandblotts.services;
 
+import com.web.app.flourishandblotts.config.jwt.JwtUtils;
 import com.web.app.flourishandblotts.controllers.request.CreateUserDTO;
 import com.web.app.flourishandblotts.models.*;
 import com.web.app.flourishandblotts.repositories.RoleRepository;
@@ -9,12 +10,11 @@ import jakarta.annotation.Resource;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestHeader;
 
+import java.net.http.HttpHeaders;
 import java.sql.Date;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,6 +27,9 @@ public class UserEntityService {
     private PasswordEncoder passwordEncoder;
     @Resource
     private StudyRepository studyRepository;
+
+    @Resource
+    private JwtUtils jwtUtils;
 
     @Resource
     private ProfessionFamilyService professionFamilyService;
@@ -132,6 +135,19 @@ public class UserEntityService {
     }
 
 
+    public boolean checkRole(String role, String bearer) {
 
+        String token = bearer.split("\\s")[1];
+        String mail = this.jwtUtils.getUsernameFromToken(token);
+        boolean hasRole = false;
 
+        if(this.userRepository.checkRole(mail).isPresent() &&
+            !this.userRepository.checkRole(mail).get().isEmpty()){
+            System.out.println("Ressponse");
+            System.out.println(this.userRepository.checkRole(mail).get());
+
+        }
+
+        return false;
+    }
 }
