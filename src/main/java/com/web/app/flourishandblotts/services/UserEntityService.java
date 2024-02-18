@@ -134,6 +134,22 @@ public class UserEntityService {
         return this.userRepository.getByNif(nif);
     }
 
+    public String changePassword(Long id){
+        String message = "Password Changed with exit";
+
+        if(isCorrectPass(id)){
+
+        }
+
+
+
+        return message;
+    }
+
+    private boolean isCorrectPass(Long id) {
+
+        return false;
+    }
 
 
     public boolean checkRole(String[] roles, String bearer) {

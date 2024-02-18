@@ -142,5 +142,33 @@ public class UserController {
         response.put("response", "ANONYMOUS");
         return ResponseEntity.ok(response);
     }
+    @PostMapping("passChange/{:id}")
+    public ResponseEntity<Map<String, ?>> changePassword(@PathVariable Long id){
+
+        Map<String, String> response = new HashMap<>();
+        System.out.println("id: " + id);
+
+
+        String m = userService.changePassword(id);
+        System.out.println();
+        switch (m) {
+            case "PassNotCorrect" -> {
+                response.put("message", "The password old is not correct.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+            case "NotMatchComplexityRules" -> {
+                response.put("message", "The password not match the complexity rules.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+            case "NotMatchPasswords" -> {
+                response.put("message", "The 2 passwords not match.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+        }
+
+        response.put("message", m);
+        return ResponseEntity.ok(response);
+    }
+
 
 }
